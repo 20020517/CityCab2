@@ -20,7 +20,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Booking ID</th>
+                    <th>Booking ID</th> 
                     <th>Car ID</th>
                     <th>Start Location</th>
                     <th>End Location</th>
@@ -50,6 +50,7 @@
     %>
 
     <a href="customer_dashboard.jsp" class="btn btn-primary">Back to Dashboard</a>
+    
 </div>
 </body>
 </html>

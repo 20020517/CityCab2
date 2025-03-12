@@ -38,8 +38,8 @@ public class BookingDAO {
     // Get bookings for a specific customer
     public static List<Booking> getBookingsByCustomer(int customerId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM booking WHERE customer_id = ?";
-
+        String sql = "SELECT *,cars.driver_id FROM booking  inner join cars on cars.id = booking.car_id WHERE customer_id = ?";
+System.out.print(customerId);
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
              
@@ -48,7 +48,7 @@ public class BookingDAO {
 
             while (rs.next()) {
                 Booking booking = new Booking(
-                    rs.getInt("id"),
+                    rs.getInt("booking_id"),
                     rs.getInt("customer_id"),
                     rs.getInt("car_id"),
                     rs.getInt("driver_id"),
@@ -88,3 +88,4 @@ public class BookingDAO {
         }
     }
 }
+

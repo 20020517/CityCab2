@@ -36,6 +36,6 @@ public class ViewBookingsServlet extends HttpServlet {
         request.setAttribute("bookings", bookings);
 
         // Forward the request to the view_bookings.jsp page
-        request.getRequestDispatcher("view_bookings.jsp").forward(request, response);
+        request.getRequestDispatcher("viewbookings.jsp").forward(request, response);
     }
 }
