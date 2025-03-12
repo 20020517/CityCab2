@@ -115,7 +115,7 @@
 
         <div class="card">
             <h3>View Booking Details</h3>
-            <a href="viewbookings.jsp"><button>Check Status</button></a>
+            <a href="ViewBookingsServlet"><button>Check Status</button></a>
         </div>
 
         <div class="card">
