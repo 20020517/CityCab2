@@ -17,55 +17,59 @@ import java.util.List;
 @WebServlet("/BookCabServlet")
 public class BookCabServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get the customer_id from the session
-        HttpSession session = request.getSession(false); // Prevents creating a new session
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendRedirect("login.jsp?error=session_expired");
             return;
         }
 
-        // Retrieve userId from session
         Integer customerId = (Integer) session.getAttribute("userId");
         if (customerId == null) {
             response.sendRedirect("login.jsp?error=session_expired");
             return;
         }
 
-        // Get booking details from form
         int carId = Integer.parseInt(request.getParameter("carId"));
         String startLocation = request.getParameter("startLocation");
         String endLocation = request.getParameter("endLocation");
 
-        // Validate inputs
         if (startLocation.isEmpty() || endLocation.isEmpty()) {
             response.sendRedirect("book_cab.jsp?error=invalid_input");
             return;
         }
 
-        String query = "INSERT INTO booking (customer_id, car_id, start_location, end_location, status) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            // Fetch the driver assigned to this car
+            String getDriverQuery = "SELECT driver_id FROM cars WHERE id=?";
+            PreparedStatement getDriverStmt = conn.prepareStatement(getDriverQuery);
+            getDriverStmt.setInt(1, carId);
+            ResultSet rs = getDriverStmt.executeQuery();
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            if (rs.next()) {
+                int driverId = rs.getInt("driver_id");
 
-            stmt.setInt(1, customerId);
-            stmt.setInt(2, carId);
-            stmt.setString(3, startLocation);
-            stmt.setString(4, endLocation);
-            stmt.setString(5, "pending");
+                // Insert booking with driver ID
+                String insertBookingQuery = "INSERT INTO booking (customer_id, car_id, driver_id, start_location, end_location, status) VALUES (?, ?, ?, ?, ?, ?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertBookingQuery);
+                insertStmt.setInt(1, customerId);
+                insertStmt.setInt(2, carId);
+                insertStmt.setInt(3, driverId);
+                insertStmt.setString(4, startLocation);
+                insertStmt.setString(5, endLocation);
+                insertStmt.setString(6, "pending");
 
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows > 0) {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int bookingId = generatedKeys.getInt(1);
-                    // Fetch the bookings for the current customer after booking
-                    BookingDAO bookingDAO = new BookingDAO();
-                    List<Booking> bookings = bookingDAO.getBookingsByCustomer(customerId);
-                    request.setAttribute("bookings", bookings);
-                    request.getRequestDispatcher("/viewbookings.jsp").forward(request, response);
+                int affectedRows = insertStmt.executeUpdate();
+                if (affectedRows > 0) {
+                    response.sendRedirect("customer_dashboard.jsp?success=booking_confirmed");
+                } else {
+                    response.sendRedirect("book_cab.jsp?error=database_error");
                 }
+            } else {
+                response.sendRedirect("book_cab.jsp?error=no_driver_assigned");
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendRedirect("book_cab.jsp?error=database_error");
