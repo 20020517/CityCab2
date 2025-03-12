@@ -87,38 +87,4 @@ public class BookingDAO {
             return false;
         }
     }
-
-    // Update booking status (For Admin or Driver)
-    public static boolean updateBookingStatus(int bookingId, String newStatus) {
-        String sql = "UPDATE booking SET status = ? WHERE id = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, newStatus);
-            stmt.setInt(2, bookingId);
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // Delete booking (For Admin)
-    public static boolean deleteBooking(int bookingId) {
-        String sql = "DELETE FROM booking WHERE id = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, bookingId);
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }

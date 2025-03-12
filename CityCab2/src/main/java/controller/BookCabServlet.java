@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Booking;
-import model.User;
 
 import java.io.IOException;
 import java.sql.*;
@@ -45,10 +44,10 @@ public class BookCabServlet extends HttpServlet {
         }
 
         String query = "INSERT INTO booking (customer_id, car_id, start_location, end_location, status) VALUES (?, ?, ?, ?, ?)";
-        
-        try (Connection conn = DatabaseConnection.getConnection(); 
+
+        try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            
+
             stmt.setInt(1, customerId);
             stmt.setInt(2, carId);
             stmt.setString(3, startLocation);
@@ -64,7 +63,7 @@ public class BookCabServlet extends HttpServlet {
                     BookingDAO bookingDAO = new BookingDAO();
                     List<Booking> bookings = bookingDAO.getBookingsByCustomer(customerId);
                     request.setAttribute("bookings", bookings);
-                    request.getRequestDispatcher("view_bookings.jsp").forward(request, response);
+                    request.getRequestDispatcher("/viewbookings.jsp").forward(request, response);
                 }
             }
         } catch (SQLException e) {

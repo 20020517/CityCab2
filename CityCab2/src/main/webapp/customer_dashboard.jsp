@@ -90,11 +90,11 @@
         <h2>Customer Panel</h2>
         <a href="register.jsp">Register / Login</a>
         <a href="book_cab.jsp">Book a Cab</a>
-        <a href="view_bookings.jsp">View Booking Details</a>s
+        <a href="viewbookings.jsp">View Booking Details</a>
         
         <a href="payment.jsp">Receive & Pay the Bill</a>
         <a href="logout.jsp">Logout</a>
-        <a href="ViewBookingServlet">View Booking</a>
+        
         
     </div>
 
@@ -115,7 +115,7 @@
 
         <div class="card">
             <h3>View Booking Details</h3>
-            <a href="ViewBookingServlet"><button>Check Status</button></a>
+            <a href="viewbookings.jsp"><button>Check Status</button></a>
         </div>
 
         <div class="card">

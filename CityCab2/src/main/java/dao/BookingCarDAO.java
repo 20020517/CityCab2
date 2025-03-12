@@ -54,4 +54,9 @@ public class BookingCarDAO {
         }
         return false;
     }
+
+	public List<BookingCar> getBookingsByCustomer(Integer customerId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
