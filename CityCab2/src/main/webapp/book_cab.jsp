@@ -20,6 +20,8 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background: url('css/images/image21.jpg') no-repeat center center fixed;
+            background-size: cover;
         }
         .container {
             margin-top: 50px;
